@@ -1,3 +1,5 @@
+var githubUrl = 'https://github.com/jtedwards21/mapdata/blob/master/public/json/ne_50m_admin_0_countries.geojson'
+
 var width = 900
 var height = 600
 
