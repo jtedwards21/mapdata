@@ -1,6 +1,7 @@
-h = $(window).height();
-w = $(window).width();
-console.log(w);
+h = innerHeight;
+w = innerWidth;
+console.log(h);
+
 
 var makeMap = function(url){
 //Use own server to serve map content
@@ -23,12 +24,16 @@ var makeMap = function(url){
     //var s = Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
     var boundsWidth = b[1][0] - b[0][0];
     var boundsHeight = b[1][1] - b[0][1];
+    console.log(boundsWidth);
     
-  svg.attr("width", boundsWidth)
-  .attr("height", boundsHeight);
+  svg.attr("width", innerWidth)
+  .attr("height", innerHeight);
     console.log(boundsHeight);
-    //var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-    projection.scale(100)//.translate(t);
+    s = 100;
+    projection.scale(s)
+
+    var t = [innerWidth / 2,innerHeight /2];
+    projection.translate(t);
 
     var map = svg.append('g').attr('class', 'boundary');
     var l  = map.selectAll('path').data(countries.features)
