@@ -1,6 +1,5 @@
 h = innerHeight;
 w = innerWidth;
-console.log(h);
 
 
 var makeMap = function(url){
@@ -16,11 +15,9 @@ var makeMap = function(url){
     .projection(projection);
 　　
   d3.json(url, function(error, json){
-    console.log(json);
 
     var countries = topojson.feature(json, json.objects.ne_50m_admin_0_countries)
     var b = path.bounds(countries);
-    console.log(b);
 
 
     svg.attr("width", innerWidth)
@@ -35,13 +32,38 @@ var makeMap = function(url){
     var t = [innerWidth / 2,innerHeight /2];
     projection.translate(t);
 
+    var dragging = function(){
+      var oldT = projection.translate();
+    };
+    var flag = [0,0]
+    
+    
+
     var map = svg.append('g').attr('class', 'boundary');
+    
+
+
     var l  = map.selectAll('path').data(countries.features)
 　　　　l.enter()
     .append('path')
     .attr('d', path)
     .attr('fill', 'red');
+
+    svg
+    .on("mousedown", function(){
+	flag = [d3.event.clientX,d3.event.clientY];
+}, false)
+    .on("mouseup", function(){
+	var newT = [d3.event.clientX - flag[0], d3.event.clientY - flag[1]];
+	oldT = projection.translate();
+	projection.translate([newT[0]+oldT[0], newT[1]+oldT[1]]);
+        l.attr('d', path);
+}, false);
+
+
   });
+
+  console.log(projection.translate());
   
   drawMeteors("/public/data/meteors.json", projection);
 
