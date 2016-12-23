@@ -1,3 +1,7 @@
+h = $(window).height();
+w = $(window).width();
+console.log(w);
+
 var makeMap = function(url){
 //Use own server to serve map content
 
@@ -31,6 +35,7 @@ var makeMap = function(url){
 　　　　l.enter()
     .append('path')
     .attr('d', path)
+    .attr('fill', 'red');
   });
   
   drawMeteors("/public/data/meteors.json", projection);
