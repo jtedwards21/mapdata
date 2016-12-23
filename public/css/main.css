@@ -3,6 +3,8 @@ body {
   margin: 0 auto;
 　　height: 100%;
   width: 100%;
+  position: absolute;
+  top: 0;
 }
 
 
@@ -11,6 +13,21 @@ body {
   font-style: normal;
   font-weight: normal;
   src: url("Denominator.ttf") format('truetype');
+}
+
+.header {
+　　position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #333;
+  text-align: center;
+}
+
+.header p {
+  font-size: 2em;
+  color: white;
 }
 
 .footer {
@@ -54,13 +71,14 @@ body {
   color: #555;
 }
 
+
 #box {
   background-color: transparent;
   margin-left: auto;
   margin-right: auto;
   float: none;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.32), 0 3px 12px 0 rgba(0, 0, 0, 0.24);
-  height: 100%
+  height: 100%;
   margin-top: 80px;
 }
 

@@ -21,16 +21,16 @@ var makeMap = function(url){
     var countries = topojson.feature(json, json.objects.ne_50m_admin_0_countries)
     var b = path.bounds(countries);
     console.log(b);
-    //var s = Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
-    var boundsWidth = b[1][0] - b[0][0];
-    var boundsHeight = b[1][1] - b[0][1];
-    console.log(boundsWidth);
-    
-  svg.attr("width", innerWidth)
-  .attr("height", innerHeight);
-    console.log(boundsHeight);
-    s = 100;
+
+
+    svg.attr("width", innerWidth)
+    .attr("height", innerHeight);
+    s = 300;
     projection.scale(s)
+
+    d3.selectAll(".boundary")
+    .attr("width", innerWidth)
+    .attr("height", innerHeight);
 
     var t = [innerWidth / 2,innerHeight /2];
     projection.translate(t);
