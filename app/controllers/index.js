@@ -1,30 +1,33 @@
-var githubUrl = "https://raw.githubusercontent.com/jtedwards21/mapdata/master/public/json/ne_50m_admin_0_countries.geojson"
+var makeMap = function(url){
+//Use own server to serve map content
 
-var width = 900
-var height = 600
+  var width = 500;
+  var height = 500;
 
-var projection = d3.geo.conicEqualArea()
+  //Set up SVG
+  var svg = d3.select("#chart")
 
-var svg = d3.select("#chart")
+  svg.attr("width", width)
+  .attr("height", height)
 
-svg.attr("width", width)
-.attr("height", height)
+  var projection = d3.geo.albers()
+    .center([0, 55.4])
+    .rotate([0, 0])
+    .parallels([50, 60])
+    .scale(60)
+    .translate([width / 2, height / 2]);
 
-var path = d3.geo.path()
-.projection(projection)
+  var path = d3.geo.path()
+    .projection(projection);
+　　
+  d3.json(url, function(error, json){
+    console.log(json);
+    //var admin_1 = topojson.feature(json, json.objects.ne_50m_admin_0_countries);
 
-var g = svg.append("g");
+    svg.append("path")
+    .datum(topojson.feature(json, json.objects.ne_50m_admin_0_countries))
+    .attr('d', path)
+  });
+};
 
-
-//How can I get JSON off github?
-d3.json(githubUrl, function(error, topology){
-window.topology = topology
-console.log('l')
-var t = topojson.object(topology.features)
-console.log(t)
-g.selectAll("path")
-.data(t.geometries)
-.enter()
-.append("path")
-.attr("d", path)
-})
+makeMap("/public/data/map.json");
