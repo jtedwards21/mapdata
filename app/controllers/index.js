@@ -32,7 +32,30 @@ var makeMap = function(url){
     .append('path')
     .attr('d', path)
   });
+  
+  drawMeteors("/public/data/meteors.json", projection);
 
 };
+
+var drawMeteors = function(url, projection){
+  svg = d3.select("#chart");
+  d3.json(url, function(json){
+     var meteors = svg.append('g')
+     .selectAll('path')
+     .data(json.features)
+     .enter()
+     .append('circle')
+     .attr('cx', function(d){
+	return projection([d.properties.reclong, d.properties.reclat])[0] 
+      })
+     .attr('cy', function(d) { 
+        return projection([d.properties.reclong,d.properties.reclat])[1] 
+      })
+     .attr('r', 2)
+     .attr('fill', 'blue')
+     
+
+     })
+}
 
 makeMap("/public/data/map.json");
