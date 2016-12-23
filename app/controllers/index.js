@@ -1,33 +1,38 @@
 var makeMap = function(url){
 //Use own server to serve map content
 
-  var width = 500;
-  var height = 500;
-
   //Set up SVG
   var svg = d3.select("#chart")
 
-  svg.attr("width", width)
-  .attr("height", height)
 
-  var projection = d3.geo.albers()
-    .center([0, 55.4])
-    .rotate([0, 0])
-    .parallels([50, 60])
-    .scale(60)
-    .translate([width / 2, height / 2]);
+  var projection = d3.geo.mercator();
 
   var path = d3.geo.path()
     .projection(projection);
 　　
   d3.json(url, function(error, json){
     console.log(json);
-    //var admin_1 = topojson.feature(json, json.objects.ne_50m_admin_0_countries);
 
-    svg.append("path")
-    .datum(topojson.feature(json, json.objects.ne_50m_admin_0_countries))
+    var countries = topojson.feature(json, json.objects.ne_50m_admin_0_countries)
+    var b = path.bounds(countries);
+    console.log(b);
+    //var s = Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+    var boundsWidth = b[1][0] - b[0][0];
+    var boundsHeight = b[1][1] - b[0][1];
+    
+  svg.attr("width", boundsWidth)
+  .attr("height", boundsHeight);
+    console.log(boundsHeight);
+    //var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    projection.scale(100)//.translate(t);
+
+    var map = svg.append('g').attr('class', 'boundary');
+    var l  = map.selectAll('path').data(countries.features)
+　　　　l.enter()
+    .append('path')
     .attr('d', path)
   });
+
 };
 
 makeMap("/public/data/map.json");

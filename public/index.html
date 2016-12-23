@@ -3,10 +3,17 @@
 <link rel="stylesheet" href="public/css/main.css">
 <script src="/public/js/d3.v3.min.js"></script>
 <script src="/public/js/topojson.v1.min.js"></script>
+<script src="/public/js/jquery-3.1.1.min.js"></script>
 </head>
 <body>
-<div>Hello World</div>
-<svg id="chart"></svg>
+<div id="box">
+  <div class="graph-title">World Map</div>
+  <svg id="chart"></svg>
+</div>
+<footer class="footer"<div class="container"><a href="https://github.com/jtedwards21/barchart" id="github-container"><p>Check out the code on github</p></a></div></footer>
 <script src="/controllers/index.js"></script>
+<script>
+$("#box").css("width", "1000px");
+</script>
 </body>
 </html>
