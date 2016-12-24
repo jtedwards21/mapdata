@@ -40,7 +40,9 @@ var makeMap = function(){
 　　　　.enter()
     .append('path')
     .attr('d', path)
-    .attr('fill', 'red');
+
+    l.transition()
+    .attr('fill', 'red').duration(1000);
 
     var flag = [0,0]
 
@@ -56,31 +58,45 @@ var makeMap = function(){
      .attr('cy', function(d) { 
         return projection([d.properties.reclong,d.properties.reclat])[1] 
       })
-     .attr('r', 2)
-     .attr('fill', 'blue');
+     .attr('r', 2);
+     
+     m.transition()
+     .attr('fill', 'blue').duration(1000);
 
-    var flag = [0,0]
+    
+
+   //This event structure is off
+   // It should be mousemove looking to see if mousedown has flagged
+    var flag = [0,0]; 
 
     svg
+    .on("mousemove", function(){
+	if(d3.event.buttons === 1){
+	  var newT = [d3.event.clientX - flag[0], d3.event.clientY - flag[1]];
+	  oldT = projection.translate();
+	  flag = [d3.event.clientX,d3.event.clientY];
+	  projection.translate([newT[0]+oldT[0], newT[1]+oldT[1]]);
+	  l.attr('d', path);
+          m.attr('cx', function(d){
+	    return projection([d.properties.reclong, d.properties.reclat])[0] 
+          })
+          m.attr('cy', function(d) { 
+            return projection([d.properties.reclong,d.properties.reclat])[1] 
+          })
+	}
+	console.log(d3.event);
+     }, false)
     .on("mousedown", function(){
 	flag = [d3.event.clientX,d3.event.clientY];
-}, false)
+	m.transition().attr('opacity', '.2').duration(200);
+	l.transition().attr('opacity', '.5').duration(200);
+     }, false)
     .on("mouseup", function(){
-	var newT = [d3.event.clientX - flag[0], d3.event.clientY - flag[1]];
-	oldT = projection.translate();
-	projection.translate([newT[0]+oldT[0], newT[1]+oldT[1]]);
-	l.attr('d', path);
-        
-         m.attr('cx', function(d){
-	return projection([d.properties.reclong, d.properties.reclat])[0] 
-      })
-     m.attr('cy', function(d) { 
-        return projection([d.properties.reclong,d.properties.reclat])[1] 
-      })
-}, false);
+	
+	m.transition().attr('opacity', '1').duration(200);
+	l.transition().attr('opacity', '1').duration(200);
+     }, false);
    });
-
-
 };
 
 
