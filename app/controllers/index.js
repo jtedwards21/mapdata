@@ -1,5 +1,7 @@
 h = innerHeight;
 w = innerWidth;
+landColor = "#AEA8E5";
+meteorColor = "#615D7F";
 
 
 var makeMap = function(){
@@ -42,7 +44,7 @@ var makeMap = function(){
     .attr('d', path)
 
     l.transition()
-    .attr('fill', 'red').duration(1000);
+    .attr('fill', landColor).duration(1000);
 
     var flag = [0,0]
 
@@ -58,10 +60,14 @@ var makeMap = function(){
      .attr('cy', function(d) { 
         return projection([d.properties.reclong,d.properties.reclat])[1] 
       })
-     .attr('r', 2);
+     .attr('r', function(d){
+	console.log(d);
+	return d.properties.mass /100000;
+     });
      
      m.transition()
-     .attr('fill', 'blue').duration(1000);
+     .attr('opacity', .9)
+     .attr('fill', meteorColor).duration(1000);
 
     
 
@@ -84,17 +90,16 @@ var makeMap = function(){
             return projection([d.properties.reclong,d.properties.reclat])[1] 
           })
 	}
-	console.log(d3.event);
      }, false)
     .on("mousedown", function(){
 	flag = [d3.event.clientX,d3.event.clientY];
-	m.transition().attr('opacity', '.2').duration(200);
-	l.transition().attr('opacity', '.5').duration(200);
+	m.transition().attr('opacity', '.2').duration(100);
+	l.transition().attr('opacity', '.5').duration(100);
      }, false)
     .on("mouseup", function(){
 	
-	m.transition().attr('opacity', '1').duration(200);
-	l.transition().attr('opacity', '1').duration(200);
+	m.transition().attr('opacity', '1').duration(400);
+	l.transition().attr('opacity', '1').duration(400);
      }, false);
    });
 };
