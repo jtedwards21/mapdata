@@ -2,7 +2,13 @@ h = innerHeight;
 w = innerWidth;
 landColor = "#AEA8E5";
 meteorColor = "#615D7F";
+color3 = "#7E79A6";
+color4 = "#747099";
+color5 = "#444159";
 
+var div = d3.select('body').append('div')
+  .attr('class', 'tooltip')
+  .style('opacity', 0);
 
 var makeMap = function(){
 //Use own server to serve map content
@@ -60,14 +66,46 @@ var makeMap = function(){
      .attr('cy', function(d) { 
         return projection([d.properties.reclong,d.properties.reclat])[1] 
       })
-     .attr('r', function(d){
-	console.log(d);
-	return d.properties.mass /100000;
-     });
+     .attr('r', function(d) { 
+        var range = 718750/2/2;
+    
+        if (d.properties.mass <= range) return 2;
+        else if (d.properties.mass <= range*2) return 10;
+        else if (d.properties.mass <= range*3) return 20;
+        else if (d.properties.mass <= range*20) return 30;
+        else if (d.properties.mass <= range*100) return 40;
+        return 50;
+      })
      
      m.transition()
      .attr('opacity', .9)
      .attr('fill', meteorColor).duration(1000);
+
+     m.on('mouseover', function(d) {
+        d3.select(this).attr('d', path).style('fill', 'black');
+        // Show tooltip
+        div.transition()
+          .duration(200)
+          .style('opacity', .9);
+        div.html( '<span class="def">fall:</span> ' + d.properties.fall + '<br>' + 
+                  '<span class="def">mass:</span> ' + d.properties.mass + '<br>' + 
+                  '<span class="def">name:</span> ' + d.properties.name + '<br>' + 
+                  '<span class="def">nametype:</span> ' + d.properties.nametype + '<br>' +
+                  '<span class="def">recclass:</span> ' + d.properties.recclass + '<br>' + 
+                  '<span class="def">reclat:</span> ' + d.properties.reclat + '<br>' + 
+                  '<span class="def">year:</span> ' + d.properties.year + '<br>')
+          .style('left', (d3.event.pageX+30) + 'px')
+          .style('top', (d3.event.pageY/1.5) + 'px')
+      })
+      .on('mouseout', function(d) {
+        // Reset color of dot
+        d3.select(this).attr('d', path).style('fill', function(d) { return d.properties.hsl });
+
+        // Fade out tooltip
+        div.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
 
     
 

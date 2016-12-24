@@ -1,3 +1,10 @@
+@font-face {
+  font-family: Denominator;
+  font-style: normal;
+  font-weight: normal;
+  src: url("Denominator.ttf") format('truetype');
+}
+
 body {
   background-color: #444159;
   margin: 0 auto;
@@ -7,13 +14,28 @@ body {
   top: 0;
 }
 
-
-@font-face {
-  font-family: Denominator;
-  font-style: normal;
-  font-weight: normal;
-  src: url("Denominator.ttf") format('truetype');
+#button-container {
+  position: fixed;
+  bottom: 100;
+  left: 90%;
 }
+
+.button {
+  background-color: #333;
+  padding-left: 20px;
+  padding-right: 20px;
+　　font-family: Denominator;
+  text-align: center;
+  margin-right: 10px;
+  font-weight: bold;
+  font-size: 1.5em;
+  color: white;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
 
 .header {
 　　position: fixed;
