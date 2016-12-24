@@ -16,7 +16,7 @@ var makeMap = function(){
   //Set up SVG
   var svg = d3.select("#chart")
   svg.attr("width", innerWidth)
-  .attr("height", innerHeight);
+  .attr("height", innerHeight - 50);
 
   //Set up Projection
   var projection = d3.geo.mercator();
@@ -25,6 +25,8 @@ var makeMap = function(){
 
   var t = [innerWidth / 2,innerHeight /2];
   projection.translate(t);
+
+  
 
   var map = svg.append('g').attr('class', 'boundary');
   d3.selectAll(".boundary")
@@ -113,11 +115,62 @@ var makeMap = function(){
    // It should be mousemove looking to see if mousedown has flagged
     var flag = [0,0]; 
 
+    d3.select("body")
+    .on("keydown", function(){
+	var key = d3.event.key;
+	switch(key){
+	  case "ArrowUp":
+	    var oldT = projection.translate();
+	　　　　projection.translate([oldT[0], oldT[1] + 3]);
+	    l.attr('d', path);
+            m.attr('cx', function(d){
+	      return projection([d.properties.reclong, d.properties.reclat])[0] 
+            })
+            m.attr('cy', function(d) { 
+              return projection([d.properties.reclong,d.properties.reclat])[1] 
+            })
+	    break;
+	  case "ArrowDown":
+	    var oldT = projection.translate();
+	　　　　projection.translate([oldT[0], oldT[1] - 3]);
+	    l.attr('d', path);
+            m.attr('cx', function(d){
+	      return projection([d.properties.reclong, d.properties.reclat])[0] 
+            })
+            m.attr('cy', function(d) { 
+              return projection([d.properties.reclong,d.properties.reclat])[1] 
+            })
+	    break;
+	  case "ArrowRight":
+	    var oldT = projection.translate();
+	　　　　projection.translate([oldT[0] - 3, oldT[1]]);
+	    l.attr('d', path);
+            m.attr('cx', function(d){
+	      return projection([d.properties.reclong, d.properties.reclat])[0] 
+            })
+            m.attr('cy', function(d) { 
+              return projection([d.properties.reclong,d.properties.reclat])[1] 
+            })
+	    break;
+	  case "ArrowLeft":
+	    var oldT = projection.translate();
+	　　　　projection.translate([oldT[0] + 3, oldT[1]]);
+	    l.attr('d', path);
+            m.attr('cx', function(d){
+	      return projection([d.properties.reclong, d.properties.reclat])[0] 
+            })
+            m.attr('cy', function(d) { 
+              return projection([d.properties.reclong,d.properties.reclat])[1] 
+            })
+	    break;
+	}
+    })
+
     svg
     .on("mousemove", function(){
 	if(d3.event.buttons === 1){
 	  var newT = [d3.event.clientX - flag[0], d3.event.clientY - flag[1]];
-	  oldT = projection.translate();
+	  var oldT = projection.translate();
 	  flag = [d3.event.clientX,d3.event.clientY];
 	  projection.translate([newT[0]+oldT[0], newT[1]+oldT[1]]);
 	  l.attr('d', path);
@@ -139,6 +192,32 @@ var makeMap = function(){
 	m.transition().attr('opacity', '1').duration(400);
 	l.transition().attr('opacity', '1').duration(400);
      }, false);
+
+     var zoomIn = d3.select("#zoom-in")
+     .on("click", function(){
+	var scale = projection.scale();
+	projection.scale(scale + 100);
+	l.attr('d', path);
+        m.attr('cx', function(d){
+	  return projection([d.properties.reclong, d.properties.reclat])[0] 
+        });
+        m.attr('cy', function(d) { 
+          return projection([d.properties.reclong,d.properties.reclat])[1] 
+        });
+     });
+
+     var zoomOut = d3.select("#zoom-out")
+     .on("click", function(){
+	var scale = projection.scale();
+	projection.scale(scale - 100);
+	l.attr('d', path);
+        m.attr('cx', function(d){
+	  return projection([d.properties.reclong, d.properties.reclat])[0] 
+        });
+        m.attr('cy', function(d) { 
+          return projection([d.properties.reclong,d.properties.reclat])[1] 
+        });
+     });
    });
 };
 
